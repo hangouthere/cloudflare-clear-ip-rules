@@ -1,5 +1,11 @@
 import { useReducer } from 'react';
+import { AppStates } from './reducers/AppStateReducer';
 import { _RootReducer } from './reducers/_RootReducer';
+
+export const InitialStoreState = {
+  AppState: AppStates.LOADING
+}
+
 
 export default AppStateManager = (props) => {
   const [state, dispatch] = useReducer(
