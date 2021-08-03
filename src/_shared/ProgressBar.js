@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 
-const BuildPercentFill = (props) => {
+const BuildPercentFill = props => {
   const { percent, columns, charEmpty, charFilled } = props;
 
   const numFilled = Math.min(Math.floor(columns * percent), columns);
@@ -11,7 +11,7 @@ const BuildPercentFill = (props) => {
   return `${strFilled}${strEmpty}`;
 };
 
-const BuildPercentBar = (props) => {
+const BuildPercentBar = props => {
   const { label, borderleft, borderRight } = props;
 
   return (
@@ -31,10 +31,10 @@ const DEFAULT_PROPS = {
   charEmpty: '░',
   charFilled: '█',
   borderLeft: '[',
-  borderRight: ']',
+  borderRight: ']'
 };
 
-export default ProgressBar = (props) => {
+export default ProgressBar = props => {
   props = { ...DEFAULT_PROPS, ...props };
 
   return BuildPercentBar(props);

@@ -7,12 +7,12 @@ export default Header = ({
   font = 'Standard',
   verticalLayout = 'default',
   horizontalLayout = 'default',
-  color = 'white',
+  color = 'white'
 }) => {
   const lines = Figlet.textSync(title, {
     font,
     horizontalLayout,
-    verticalLayout,
+    verticalLayout
   })
     .split('\n')
     .slice(0, -1);

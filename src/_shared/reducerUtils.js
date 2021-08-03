@@ -1,11 +1,11 @@
-// https://stackoverflow.com/questions/59200785/react-usereducer-how-to-combine-multiple-reducers
+// https://stackoverflow.com/a/61439698
 
-export const combineReducers = (slices) => (state, action) =>
+export const combineReducers = slices => (state, action) =>
   Object.keys(slices).reduce(
     // use for..in loop, if you prefer it
     (acc, prop) => ({
       ...acc,
-      [prop]: slices[prop](acc[prop], action),
+      [prop]: slices[prop](acc[prop], action)
     }),
     state
   );

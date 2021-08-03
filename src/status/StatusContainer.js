@@ -1,22 +1,20 @@
-import React, { useContext } from 'react';
 import { Box } from 'ink';
+import React, { useContext } from 'react';
 
-import { AppContext } from '../App';
-import Status from './Status';
 import CFConfig from './CFConfig';
 import Progress from './Progress';
+import Status from './Status';
 
-export default StatusArea = ({}) => {
-  const ctx = useContext(AppContext);
+import { StoreContext } from '../state/StoreProvider';
+
+export default StatusContainer = ({}) => {
+  const { state } = useContext(StoreContext);
 
   const {
-    status: {
-      app: appStatus,
-      scan: { numIPs, currIP },
-    },
-
-    cf: { email, token },
-  } = ctx;
+    AppState: { status: appStatus, isConfigured, isScanning },
+    CloudflareConfig: { email, token },
+    Scanner: { numIPs, currIP }
+  } = state;
 
   return (
     <Box
@@ -26,8 +24,8 @@ export default StatusArea = ({}) => {
       paddingX={1}
     >
       <Status {...{ appStatus }} />
-      { !!token && !!email && <CFConfig {...{ token, email }} /> }
-      { !!currIP && !!numIPs && <Progress {...{ currIP, numIPs }} />}
+      {isConfigured && <CFConfig {...{ token, email }} />}
+      {isScanning && <Progress {...{ currIP, numIPs }} />}
     </Box>
   );
 };

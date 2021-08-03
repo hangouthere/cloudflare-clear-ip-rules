@@ -1,12 +1,24 @@
-import React, { createContext, useReducer } from 'react';
-import _RootReducer, { _RootDefault } from './reducers/_RootReducer';
+import * as Conf from 'conf';
+import React, { createContext, useMemo, useReducer } from 'react';
+import { _InitialRootState, _RootReducer } from './reducers/_RootReducer';
 
-export const StoreContext = createContext();
+const ConfigStore = new Conf({
+  cwd: globalThis.__dirname,
+  configName: '.config'
+});
 
-export const StoreProvider = (props) => {
-    const [RootState, dispatch] = useReducer(_RootReducer, _RootDefault);
+export const StoreContext = createContext(ConfigStore.store);
 
-    const PROVIDER_VALUE = {RootState, dispatch};
+export const StoreProvider = props => {
+  const [state, dispatch] = useReducer(_RootReducer, _InitialRootState);
+
+  const PROVIDER_VALUE = useMemo(
+    () => ({
+      state,
+      dispatch
+    }),
+    [state]
+  );
 
   return (
     <StoreContext.Provider value={PROVIDER_VALUE}>

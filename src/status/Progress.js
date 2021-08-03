@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box, Spacer, Text } from 'ink';
 import chalk from 'chalk';
+import { Box, Text } from 'ink';
+import React from 'react';
 
-import ProgressBar from '../_shared/ProgressBar';
+import ProgressBar from '_Shared/ProgressBar';
 
 export default ({ currIP, numIPs }) => {
   const percent = numIPs ? currIP / numIPs : 0;

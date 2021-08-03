@@ -28,7 +28,8 @@ class APIProxy {
 }
 
 export default class API {
-  base_url = 'https://api.cloudflare.com/client/v4/user/firewall/access_rules/rules';
+  base_url =
+    'https://api.cloudflare.com/client/v4/user/firewall/access_rules/rules';
 
   pagination = {
     page: 1,
