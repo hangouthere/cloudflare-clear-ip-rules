@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-"use strict";
+'use strict';
 
-import React from "react";
-import meow from "meow";
-import { render } from "ink";
+import React from 'react';
+import meow from 'meow';
+import { render } from 'ink';
 
-import ui from "./src/App";
+import ui from './src/App';
 
 // const cli = meow(`
 // 	Usage

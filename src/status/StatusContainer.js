@@ -6,15 +6,18 @@ import Progress from './Progress';
 import Status from './Status';
 
 import { StoreContext } from '../state/StoreProvider';
+import { AppModes } from '../state/reducers/AppStateReducer';
 
 export default StatusContainer = ({}) => {
   const { state } = useContext(StoreContext);
 
   const {
-    AppState: { status: appStatus, isConfigured, isScanning },
-    CloudflareConfig: { email, token },
-    Scanner: { numIPs, currIP }
+    App: { statusMessage, isConfigured, mode },
+    CloudflareConfig,
+    Scanner
   } = state;
+
+  const isScanning = mode === AppModes.SCANNING;
 
   return (
     <Box
@@ -23,9 +26,9 @@ export default StatusContainer = ({}) => {
       borderColor="grey"
       paddingX={1}
     >
-      <Status {...{ appStatus }} />
-      {isConfigured && <CFConfig {...{ token, email }} />}
-      {isScanning && <Progress {...{ currIP, numIPs }} />}
+      <Status {...{ statusMessage }} />
+      {isConfigured && <CFConfig {...{ CloudflareConfig }} />}
+      {isScanning && <Progress {...{ Scanner }} />}
     </Box>
   );
 };

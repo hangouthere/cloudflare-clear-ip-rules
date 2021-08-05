@@ -1,22 +1,29 @@
-export const AppStateActions = {
-  SET_STATUS: 'APP_STATE_SET_STATUS',
-  SET_CONFIGURED: 'APP_STATE_SET_CONFIGURED',
-  SET_SCANNING: 'APP_STATE_SET_CONFIGURED'
+import chalk from 'chalk';
+
+export const AppActions = {
+  SET_MODE: 'APP_ACTION_SET_MODE',
+  SET_STATUS_MSG: 'APP_ACTION_SET_STATUS_MSG'
 };
 
-export const AppStates = {
-  CUSTOM: 'APP_STATE_CUSTOM',
-  CLEARING_IP: 'APP_STATE_CLEARING_IP',
-  CONFIGURING: 'APP_STATE_CONFIGURING',
-  FETCH_NEXT_PAGE: 'APP_STATE_FETCH_NEXT_PAGE',
-  GET_INIT_DATA: 'APP_STATE_GET_INIT_DATA',
-  LOADING: 'APP_STATE_LOADING'
+export const AppStatuses = {
+  CLEARING_IP: 'APP_STATUS_CLEARING_IP',
+  CONFIGURING: 'APP_STATUS_CONFIGURING',
+  ERRORED: 'APP_STATUS_ERRORED',
+  FETCH_NEXT_PAGE: 'APP_STATUS_FETCH_NEXT_PAGE',
+  GET_INIT_DATA: 'APP_STATUS_GET_INIT_DATA',
+  READY: 'APP_STATUS_LOADING',
+  READY_TO_SCAN: 'APP_STATUS_READY_TO_SCAN'
+};
+
+export const AppModes = {
+  CONFIGURE: 'APP_MODE_CONFIGURE',
+  MENU: 'APP_MODE_MENU',
+  SCANNING: 'APP_MODE_SCANNING'
 };
 
 export const InitialAppState = {
-  status: 'Loading...',
-  isConfigured: false,
-  isScanning: false
+  mode: AppModes.MENU,
+  statusMessage: 'Ready...'
 };
 
 // !! ///////////////////////////////////////////////////////////////////////////////////////
@@ -25,20 +32,17 @@ const _getStatus = payload => {
   const { status } = payload;
 
   switch (status) {
-    case AppStates.CUSTOM:
-      return payload.message;
-    case AppStates.CLEARING_IP:
-      const { ip } = payload;
-      return `Clearing IP - (${ip})`;
-    case AppStates.CONFIGURING:
-      return 'Configuring...';
-    case AppStates.FETCH_NEXT_PAGE:
+    case AppStatuses.ERRORED:
+      return chalk.bgRed.white('- Error -') + ' ' + chalk.red(payload.error);
+    case AppStatuses.CLEARING_IP:
+      return `Clearing IP - (${payload.ip})`;
+    case AppStatuses.CONFIGURING:
+      return 'Configuring Cloudflare API';
+    case AppStatuses.FETCH_NEXT_PAGE:
       const { page, total_pages } = payload;
       return `Getting next set of IPs: Page ${page} of ${total_pages}`;
-    case AppStates.GET_INIT_DATA:
+    case AppStatuses.GET_INIT_DATA:
       return 'Retrieving Initial Data from Cloudflare...';
-    case AppStates.LOADING:
-      return 'Loading...';
     default:
       return payload;
   }
@@ -48,22 +52,27 @@ const _getStatus = payload => {
 
 export const AppStateReducer = (state, { type, payload }) => {
   switch (type) {
-    case AppStateActions.SET_STATUS:
+    case AppActions.SET_STATUS_MSG:
       return {
         ...state,
-        status: _getStatus(payload)
+        statusMessage: _getStatus(payload)
       };
-    case AppStateActions.SET_CONFIGURED:
+    case AppActions.SET_CONFIGURATION:
       return {
         ...state,
         isConfigured: payload
       };
-    case AppStateActions.SET_SCANNING:
+    case AppActions.SET_SCANNING:
       return {
         ...state,
-        status: payload
+        statusMessage: payload
           ? 'Initializing Clearing Scan...'
           : 'Clearing Scan Complete!'
+      };
+    case AppActions.SET_MODE:
+      return {
+        ...state,
+        mode: payload
       };
 
     default:

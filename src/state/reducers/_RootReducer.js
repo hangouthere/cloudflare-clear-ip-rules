@@ -7,13 +7,13 @@ import {
 import { InitialScannerState, ScannerReducer } from './ScannerReducer';
 
 export const _InitialRootState = {
-  AppState: InitialAppState,
+  App: InitialAppState,
   CloudflareConfig: InitialCloudflareConfigState,
   Scanner: InitialScannerState
 };
 
 export const _RootReducer = combineReducers({
-  AppState: AppStateReducer,
+  App: AppStateReducer,
   CloudflareConfig: CloudflareConfigReducer,
   Scanner: ScannerReducer
 });

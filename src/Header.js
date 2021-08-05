@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box, Newline, Text } from 'ink';
 import Figlet from 'figlet';
+import { Box, Text } from 'ink';
+import React from 'react';
 
 export default Header = ({
   title = 'Title Placeholder',
