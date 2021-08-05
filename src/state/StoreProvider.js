@@ -1,22 +1,20 @@
 import * as Conf from 'conf';
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer
-} from 'react';
+
+import React, { createContext, useMemo, useReducer } from 'react';
 import { _InitialRootState, _RootReducer } from './reducers/_RootReducer';
 
-const ConfigStore = new Conf({
-  cwd: globalThis.__dirname,
+export const ConfigStore = new Conf({
+  cwd: __dirname,
   configName: '.config'
 });
 
-export const StoreContext = createContext(ConfigStore.store);
+export const StoreContext = createContext();
 
 export const StoreProvider = props => {
-  const [state, dispatch] = useReducer(_RootReducer, _InitialRootState);
+  const [state, dispatch] = useReducer(_RootReducer, {
+    ..._InitialRootState,
+    CloudflareConfig: { ...ConfigStore.store }
+  });
 
   const PROVIDER_VALUE = useMemo(
     () => ({

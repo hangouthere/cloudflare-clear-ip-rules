@@ -1,8 +1,8 @@
-import chalk from 'chalk';
 import { Box, Text } from 'ink';
-import React from 'react';
 
 import ProgressBar from '_Shared/ProgressBar';
+import React from 'react';
+import chalk from 'chalk';
 
 export default ({ currIP, numIPs }) => {
   const percent = numIPs ? currIP / numIPs : 0;
@@ -16,8 +16,8 @@ export default ({ currIP, numIPs }) => {
         label={chalk.magenta('Progress')}
         charEmpty={chalk.gray('░')}
         charFilled={chalk.green('█')}
-        borderLeft={chalk.gray('[')}
-        borderRight={chalk.gray(']')}
+        charLeft={chalk.gray('[')}
+        charRight={chalk.gray(']')}
       />
 
       <Box marginRight={1}>

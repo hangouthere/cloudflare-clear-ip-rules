@@ -1,16 +1,10 @@
 import { Box } from 'ink';
-import path from 'path';
-import React from 'react';
-
 import Header from './Header';
-import ViewManager from './ViewManager';
-
-import { StoreProvider } from './state/StoreProvider';
-
+import React from 'react';
 import StatusContainer from './status/StatusContainer';
+import { StoreProvider } from './state/StoreProvider';
 import StoreSaver from './state/StoreSaver';
-
-globalThis.__dirname = path.resolve();
+import ViewManager from './views/ViewManager';
 
 const APP_WIDTH = 91;
 const APP_HEIGHT = 25;

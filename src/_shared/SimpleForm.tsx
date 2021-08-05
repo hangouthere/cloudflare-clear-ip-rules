@@ -1,14 +1,19 @@
-import { Box, useFocusManager, useInput } from 'ink';
-import { FormProps } from 'ink-form';
-import { canSubmit } from 'ink-form/lib/canSubmit';
-import { FormFieldRenderer } from 'ink-form/lib/FormFieldRenderer';
-import { SubmitButton } from 'ink-form/lib/SubmitButton';
 import * as React from 'react';
+
+import { Box, useFocusManager, useInput } from 'ink';
+import { FormProps, FormSection } from 'ink-form';
 import { useEffect, useMemo, useState } from 'react';
 
-export const SimpleForm: React.FC<FormProps> = props => {
+import { FormFieldRenderer } from 'ink-form/lib/FormFieldRenderer';
+import { SubmitButton } from 'ink-form/lib/SubmitButton';
+import { canSubmit } from 'ink-form/lib/canSubmit';
+
+interface SimpleFormProps extends FormProps {
+  autoFocus?: boolean;
+}
+
+export const SimpleForm: React.FC<SimpleFormProps> = props => {
   const isControlled = props.value !== undefined;
-  const [currentTab, setCurrentTab] = useState(0);
   const [value, setValue] = useState<object>(props.value ?? {});
   const [editingField, setEditingField] = useState<string>();
   const canSubmitForm = useMemo(
@@ -18,16 +23,17 @@ export const SimpleForm: React.FC<FormProps> = props => {
   const focusManager = useFocusManager();
 
   useEffect(() => {
-    focusManager.enableFocus();
-  }, []);
-
-  useEffect(() => {
     if (props.value) {
       setValue(props.value);
     }
   }, [props.value]);
 
   useEffect(() => {
+    focusManager.enableFocus();
+    if (props.autoFocus) {
+      focusManager.focusNext();
+    }
+
     // Set initial values
     if (!isControlled) {
       setValueAndPropagate({
@@ -53,7 +59,7 @@ export const SimpleForm: React.FC<FormProps> = props => {
   };
 
   useInput(
-    (input, key) => {
+    (_, key) => {
       if (key.upArrow) {
         focusManager.focusPrevious();
       } else if (key.downArrow) {
@@ -65,22 +71,18 @@ export const SimpleForm: React.FC<FormProps> = props => {
 
   return (
     <Box width="100%" height="100%" flexDirection="column">
-      {currentTab > props.form.sections.length - 1
-        ? null
-        : props.form.sections[currentTab].fields.map(field => (
-            <FormFieldRenderer
-              field={field}
-              key={field.name}
-              form={props.form}
-              value={value[field.name]}
-              onChange={v =>
-                setValueAndPropagate({ ...value, [field.name]: v })
-              }
-              onSetEditingField={setEditingField}
-              editingField={editingField}
-              customManagers={props.customManagers}
-            />
-          ))}
+      {props.form.sections[0].fields.map(field => (
+        <FormFieldRenderer
+          field={field}
+          key={field.name}
+          form={props.form}
+          value={value[field.name]}
+          onChange={v => setValueAndPropagate({ ...value, [field.name]: v })}
+          onSetEditingField={setEditingField}
+          editingField={editingField}
+          customManagers={props.customManagers}
+        />
+      ))}
       {!editingField && (
         <Box flexDirection="row-reverse">
           <SubmitButton

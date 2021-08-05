@@ -1,8 +1,11 @@
-import Chalk from 'chalk';
 import { Box, Text } from 'ink';
+
+import Chalk from 'chalk';
 import React from 'react';
 
-export default ({ token, email }) => {
+export default CFConfig = props => {
+  const { token, email } = props;
+
   const strToken =
     token.substr(0, 3) +
     Chalk.grey(

@@ -8,6 +8,8 @@ services:
       - .:/build
       # - /build/node_modules
     command: npm run docker-compose
+    environment: 
+      - TERM=xterm-256color
     stdin_open: true
     tty: true
     ports:

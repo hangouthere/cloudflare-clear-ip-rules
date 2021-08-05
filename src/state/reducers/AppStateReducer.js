@@ -23,7 +23,7 @@ export const AppModes = {
 
 export const InitialAppState = {
   mode: AppModes.MENU,
-  statusMessage: 'Ready...'
+  statusMessage: ''
 };
 
 // !! ///////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +43,14 @@ const _getStatus = payload => {
       return `Getting next set of IPs: Page ${page} of ${total_pages}`;
     case AppStatuses.GET_INIT_DATA:
       return 'Retrieving Initial Data from Cloudflare...';
+
+    case AppStatuses.READY:
+      return 'Welcome! Please Configure the Cloudflare Settings.';
+    case AppStatuses.READY_TO_SCAN:
+      return 'Ready to Scan...';
+
     default:
-      return payload;
+      return '';
   }
 };
 

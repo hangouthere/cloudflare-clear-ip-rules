@@ -1,5 +1,6 @@
-import React from 'react';
 import { Box, Text } from 'ink';
+
+import React from 'react';
 
 const BuildPercentFill = props => {
   const { percent, columns, charEmpty, charFilled } = props;
@@ -8,18 +9,20 @@ const BuildPercentFill = props => {
   const strFilled = charFilled.repeat(numFilled);
   const strEmpty = charEmpty.repeat(columns - numFilled);
 
+  console.log(charEmpty);
+
   return `${strFilled}${strEmpty}`;
 };
 
 const BuildPercentBar = props => {
-  const { label, borderleft, borderRight } = props;
+  const { label, charLeft, charRight } = props;
 
   return (
     <Box marginRight={1}>
       <Text>{label}: </Text>
-      <Text>{borderLeft}</Text>
+      <Text>{charLeft}</Text>
       <Text>{BuildPercentFill(props)}</Text>
-      <Text>{borderRight}</Text>
+      <Text>{charRight}</Text>
     </Box>
   );
 };
@@ -30,12 +33,12 @@ const DEFAULT_PROPS = {
   percent: 0,
   charEmpty: '░',
   charFilled: '█',
-  borderLeft: '[',
-  borderRight: ']'
+  charLeft: '[',
+  charRight: ']'
 };
 
 export default ProgressBar = props => {
-  props = { ...DEFAULT_PROPS, ...props };
+  const buildProps = { ...DEFAULT_PROPS, ...props };
 
-  return BuildPercentBar(props);
+  return BuildPercentBar(buildProps);
 };

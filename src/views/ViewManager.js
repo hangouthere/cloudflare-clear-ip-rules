@@ -1,15 +1,16 @@
-import { Box } from 'ink';
 import { createElement, useContext } from 'react';
 
-import { StoreContext } from './state/StoreProvider';
-import { AppModes } from './state/reducers/AppStateReducer';
-
-import ConfigureView from './views/ConfigureView';
-import MenuManagerView from './views/menus/MenuManagerView';
+import { AppModes } from '../state/reducers/AppStateReducer';
+import { Box } from 'ink';
+import ConfigureView from './ConfigureView';
+import MenuManagerView from './MenuManagerView';
+import ScanView from './ScanView';
+import { StoreContext } from '../state/StoreProvider';
 
 const Views = {
   [AppModes.MENU]: MenuManagerView,
-  [AppModes.CONFIGURE]: ConfigureView
+  [AppModes.CONFIGURE]: ConfigureView,
+  [AppModes.SCANNING]: ScanView
 };
 
 export default ViewManager = () => {

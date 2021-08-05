@@ -1,22 +1,22 @@
-import { Box } from 'ink';
 import React, { useContext } from 'react';
 
+import { AppModes } from '../state/reducers/AppStateReducer';
+import { Box } from 'ink';
 import CFConfig from './CFConfig';
 import Progress from './Progress';
 import Status from './Status';
-
 import { StoreContext } from '../state/StoreProvider';
-import { AppModes } from '../state/reducers/AppStateReducer';
 
 export default StatusContainer = ({}) => {
   const { state } = useContext(StoreContext);
 
   const {
-    App: { statusMessage, isConfigured, mode },
+    App: { statusMessage, mode },
     CloudflareConfig,
     Scanner
   } = state;
 
+  const isConfigured = !!CloudflareConfig.email && !!CloudflareConfig.token;
   const isScanning = mode === AppModes.SCANNING;
 
   return (
@@ -27,7 +27,7 @@ export default StatusContainer = ({}) => {
       paddingX={1}
     >
       <Status {...{ statusMessage }} />
-      {isConfigured && <CFConfig {...{ CloudflareConfig }} />}
+      {isConfigured && <CFConfig {...CloudflareConfig} />}
       {isScanning && <Progress {...{ Scanner }} />}
     </Box>
   );
