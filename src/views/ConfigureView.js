@@ -29,7 +29,7 @@ const FORM_DATA = {
         },
 
         {
-          type: 'string',
+          type: 'customError',
           name: 'token',
           label: 'Enter Global API Key',
           mask: '*',
@@ -38,7 +38,10 @@ const FORM_DATA = {
             '\nMore Info: ' +
             chalk.reset.blue.underline(
               'https://url.nfgarmy.com/cfInfoGlobalKey'
-            )
+            ),
+          customError:
+            'Please use only Alpha-Numeric input, and enough characters',
+          regex: /^[0-9A-Za-z]{10,}$/
         }
       ]
     }

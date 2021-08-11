@@ -9,9 +9,9 @@ import ViewManager from './views/ViewManager';
 const APP_WIDTH = 91;
 const APP_HEIGHT = 25;
 
-export default App = ({ name = 'Stranger' }) => {
+export default App = ({ token = null, email = null }) => {
   return (
-    <StoreProvider>
+    <StoreProvider {...{ token, email }}>
       <StoreSaver>
         <Box
           minHeight={10}

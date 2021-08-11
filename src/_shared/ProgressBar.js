@@ -9,8 +9,6 @@ const BuildPercentFill = props => {
   const strFilled = charFilled.repeat(numFilled);
   const strEmpty = charEmpty.repeat(columns - numFilled);
 
-  console.log(charEmpty);
-
   return `${strFilled}${strEmpty}`;
 };
 

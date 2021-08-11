@@ -3,9 +3,7 @@ import { Box, Text } from 'ink';
 import Chalk from 'chalk';
 import React from 'react';
 
-export default CFConfig = props => {
-  const { token, email } = props;
-
+export default CFConfig = ({ token, email }) => {
   const strToken =
     token.substr(0, 3) +
     Chalk.grey(

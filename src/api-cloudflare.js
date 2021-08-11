@@ -8,9 +8,12 @@ class APIProxy {
   }
 
   get(target, key) {
+    if (target.hasOwnProperty(key)) {
+      return target[key];
+    }
+
     if (false === this.HTTP_VERBS.includes(key)) {
-      throw new Error('Invalid Method!');
-      return;
+      throw new Error('Invalid HTTP Method: ', key);
     }
 
     return this.applyProxy(target, key);
@@ -18,11 +21,29 @@ class APIProxy {
 
   applyProxy(target, key) {
     return async function (data) {
-      return fetch(target.url, {
-        method: key,
-        body: data ?? JSON.stringify(data),
-        headers: target.headers
-      });
+      let url = target.base_url;
+
+      // If we're doing a side effect HTTP Verb (ie, non-GET),
+      // we want to tack on the identifier for the resource
+      if ('GET' !== key) {
+        url += `/${data.id}`;
+      }
+
+      return (
+        fetch(`${url}?${target.queryString}`, {
+          method: key,
+          body: data ?? JSON.stringify(data),
+          headers: target.headers
+        })
+          // .then(r => {
+          //   return r.text();
+          // })
+          .then(r => r.json())
+          .catch(e => {
+            debugger;
+            console.log(e);
+          })
+      );
     };
   }
 }
@@ -33,16 +54,14 @@ export default class API {
 
   pagination = {
     page: 1,
-    per_page: 25
+    per_page: 5
   };
 
-  get url() {
-    // Copy pagination data, and remove `totals`
-    const queryString = Object.entries(this.pagination)
+  get queryString() {
+    // Build Query string for Pagination
+    return Object.entries(this.pagination)
       .map(([key, value]) => key + '=' + value)
       .join('&');
-
-    return `${this.base_url}?${queryString}`;
   }
 
   get headers() {
