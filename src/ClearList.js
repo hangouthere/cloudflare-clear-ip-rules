@@ -1,11 +1,14 @@
-import { EventEmitter } from 'events';
 import API from './api-cloudflare';
+import { EventEmitter } from 'events';
+
+const GENERIC_ERROR = 'firewallaccessrules.api.unknown_error';
 
 export const ClearListEvents = {
-  CLEARED_IP: 'CLEARED_IP',
-  CLEARING_IP: 'CLEARING_IP',
-  FETCHING_PAGE_DATA: 'FETCHING_PAGE_DATA',
-  PAGE_COMPLETE: 'PAGE_COMPLETE'
+  CLEARED_IP: 'CLEAR_LIST_EVENTS_CLEARED_IP',
+  CLEARING_IP: 'CLEAR_LIST_EVENTS_CLEARING_IP',
+  FETCHING_PAGE_DATA: 'CLEAR_LIST_EVENTS_FETCHING_PAGE_DATA',
+  PAGE_COMPLETE: 'CLEAR_LIST_EVENTS_PAGE_COMPLETE',
+  ERRORED: 'CLEAR_LIST_EVENTS_ERRORED'
 };
 
 class IPListIterator {
@@ -71,24 +74,42 @@ export default class ClearList extends EventEmitter {
 
     console.log('Fetching next page data');
 
-    const pageData = await this.api.GET();
+    try {
+      const pageData = await this.api.GET();
 
-    console.log(pageData);
+      if (!pageData.success) {
+        console.log(pageData);
+        throw new Error(pageData.errors[0].message);
+      }
 
-    const {
-      result,
-      result_info: { total_count }
-    } = pageData;
+      console.log('Got Page Data!');
 
-    if (!this._totalPages) {
-      this.numIPs = total_count;
-      console.log('Setting totals: ', total_count, ' -> ', this._totalPages);
+      const {
+        result,
+        result_info: { total_count }
+      } = pageData;
+
+      if (!this._totalPages) {
+        this.numIPs = total_count;
+        console.log('Setting totals: ', total_count, ' -> ', this._totalPages);
+      }
+
+      this.list = new IPListIterator(this.api, result);
+    } catch (e) {
+      if (GENERIC_ERROR === e.message) {
+        this.emit(ClearListEvents.ERRORED);
+        throw new Error('Unknown Generic Error from API.');
+      }
+
+      console.log('error from api', JSON.stringify(e));
+
+      throw new Error('Error from API: ' + e.message);
     }
-
-    this.list = new IPListIterator(this.api, result);
   }
 
   async _processPageData() {
+    console.log('Processing page of data: ' + this.api.pagination.page);
+
     for await (const listIter of this.list) {
       console.log('Processed: ', listIter.data);
     }
@@ -98,6 +119,6 @@ export default class ClearList extends EventEmitter {
     this.api.pagination.page++;
 
     // Attempt to process another page!
-    return await this.process();
+    return this.process();
   }
 }

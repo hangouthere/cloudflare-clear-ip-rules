@@ -54,7 +54,7 @@ export default class API {
 
   pagination = {
     page: 1,
-    per_page: 5
+    per_page: 1
   };
 
   get queryString() {
