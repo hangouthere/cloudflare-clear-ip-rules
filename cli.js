@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 'use strict';
 
-import chalk from 'chalk';
-import { render } from 'ink';
-import meow from 'meow';
-import React from 'react';
-
-import ui from './src/App';
-import ClearList from './src/ClearList';
 import { BuildConfig } from './src/Config';
+import { CLIRunner } from './src/CliRunner';
+import React from 'react';
+import chalk from 'chalk';
+import meow from 'meow';
+import { render } from 'ink';
+import ui from './src/App';
 
 // Detect if we're in a node runtime (vs a binary)
 const nodeRuntimes = ['node', 'npx', 'npm'];
-const isNodeRuntime = nodeRuntimes.some(rt => process.argv[0].includes(rt));
+const isNodeRuntime = nodeRuntimes.some(runtimeName =>
+  process.argv[0].includes(runtimeName)
+);
 
 // Establish the command name based on runtime
 const cmdName = isNodeRuntime
@@ -29,8 +30,11 @@ const cli = meow(`
                                                  'https://url.nfgarmy.com/cfInfoGlobalKey'
                                                )}
         --email user@blah.com                - Use the email you use to log into Cloudflare
-        --clear                              - Instantly process the Clear List.
+        --clear, --clean, --ci               - Instantly process the Clear List.
                                                Assumes token/email are configured, or passed as options.
+        --quiet, -q                          - Only valid when used with ${chalk.bgGrey(
+          'clear/clean/ci'
+        )} to reduce, extraneous output. 
 
     Examples
         $ ${cmdName} --token=1234567890abcdefgh1234567890 --email=user@blah.com
@@ -39,10 +43,9 @@ const cli = meow(`
 
 const Config = BuildConfig(cli.flags);
 
-if (cli.flags.clear) {
-  // Kick off Clear processing
-  const processor = new ClearList(Config);
-  processor.process();
+if (cli.flags.clear || cli.flags.clean || cli.flags.ci) {
+  const runner = new CLIRunner({ ...Config, ...cli.flags });
+  runner.run();
 } else {
   // Render the UI
   render(React.createElement(ui, Config));
