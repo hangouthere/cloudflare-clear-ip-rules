@@ -2,7 +2,7 @@ import ClearList, { ClearListEvents } from './ClearList';
 
 import chalk from 'chalk';
 
-export class CLIRunner {
+export default class CLIRunner {
   totals = { curr: 0, totalPages: 'Unknown' };
 
   constructor(config) {
@@ -13,7 +13,7 @@ export class CLIRunner {
     return this.config.quiet || this.config.q;
   }
 
-  run() {
+  async run() {
     // Kick off Clear processing
     const processor = new ClearList(this.config);
 
@@ -25,11 +25,15 @@ export class CLIRunner {
     processor.on(ClearListEvents.TOTALS_UPDATED, this._onTotalsUpdated);
     processor.on(ClearListEvents.PROCESS_COMPLETED, this._onProcessCompleted);
 
-    processor.process();
+    try {
+      await processor.process();
+    } catch (e) {
+      // no-op, it should output on screen
+    }
   }
 
   _onErrored = err => {
-    console.log(chalk.bgRed.white('Error: ' + JSON.stringify(err)));
+    console.log(chalk.bgRed.white(`Error: ${err.message}`));
   };
 
   /* 

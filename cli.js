@@ -2,12 +2,14 @@
 'use strict';
 
 import { BuildConfig } from './src/Config';
-import { CLIRunner } from './src/CliRunner';
+import CLIRunner from './src/CliRunner';
 import React from 'react';
 import chalk from 'chalk';
 import meow from 'meow';
 import { render } from 'ink';
 import ui from './src/App';
+
+console.clear();
 
 // Detect if we're in a node runtime (vs a binary)
 const nodeRuntimes = ['node', 'npx', 'npm'];

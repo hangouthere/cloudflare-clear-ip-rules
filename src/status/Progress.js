@@ -13,7 +13,7 @@ export default ({ currIP, numIPs }) => {
       <ProgressBar
         percent={percent}
         columns={15}
-        label={chalk.magenta('Progress')}
+        label={chalk.magentaBright('Progress')}
         charEmpty={chalk.gray('░')}
         charFilled={chalk.green('█')}
         charLeft={chalk.gray('[')}

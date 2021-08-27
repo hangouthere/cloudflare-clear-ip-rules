@@ -1,21 +1,32 @@
-import ClearList, { ClearListEvents } from './ClearList';
+import ClearList, { ClearListEvents } from '../ClearList';
 
-export class ViewRunner {
+import chalk from 'chalk';
+
+export default class ViewRunner {
+  addLogEntry = null;
+  config = null;
+  setTotals = null;
+  updateCurrent = null;
   totals = { curr: 0, totalPages: 'Unknown' };
 
-  constructor({ config, setLogEntries, dispatch }) {
+  constructor({ config, addLogEntry, setTotals, updateCurrent }) {
+    this.addLogEntry = addLogEntry;
     this.config = config;
-    this.setLogEntries = setLogEntries;
-    this.dispatch = dispatch;
+    this.setTotals = setTotals;
+    this.updateCurrent = updateCurrent;
   }
 
-  run() {
+  async run() {
     // Kick off Clear processing
     const processor = new ClearList(this.config);
 
     this.addEventListeners(processor);
 
-    processor.process();
+    try {
+      await processor.process();
+    } catch (e) {
+      // no-op, it should output on screen
+    }
 
     return processor;
   }
@@ -41,7 +52,7 @@ export class ViewRunner {
   }
 
   _onErrored = err => {
-    console.log(chalk.bgRed.white('Error: ' + JSON.stringify(err)));
+    this.addLogEntry(chalk.bgRed.white(`Error: ${err.message}`));
   };
 
   /* 
@@ -64,38 +75,32 @@ export class ViewRunner {
   _onIPCleared = ({ configuration: { target: proto, value: ipAddress } }) => {
     this.totals.curr++;
 
-    if (this.isQuiet) return;
-
     const { curr, numIPs } = this.totals;
 
-    console.log(
+    this.updateCurrent(curr);
+
+    this.addLogEntry(
       chalk.green('✔') +
         ` Cleaned ${proto.toUpperCase()} (${curr} of ${numIPs}): ${ipAddress}`
     );
   };
 
   _onPageFecth = pageNum => {
-    if (this.isQuiet) return;
-
-    console.log(
+    this.addLogEntry(
       chalk.bgYellow.white.dim('Fetching Page:') +
         ` ${pageNum} of ${this.totals.totalPages}`
     );
   };
 
   _onPageCompleted = pageNum => {
-    if (this.isQuiet) return;
-
-    console.log(
+    this.addLogEntry(
       chalk.green('Page Completed:') +
         ` ${pageNum} of ${this.totals.totalPages}`
     );
   };
 
   _onPageStart = pageNum => {
-    if (this.isQuiet) return;
-
-    console.log(
+    this.addLogEntry(
       chalk.yellow('Processing Page:') +
         ` ${pageNum} of ${this.totals.totalPages}`
     );
@@ -108,13 +113,19 @@ export class ViewRunner {
     };
 
     const { numIPs, totalPages } = totals;
-    console.log(
+
+    this.addLogEntry(
       chalk.bgGreen.white('List Totals >') +
         ` Number of IPs: ${numIPs}, Number of Pages: ${totalPages}`
     );
+
+    this.setTotals({
+      numIPs,
+      totalPages
+    });
   };
 
   _onProcessCompleted = () => {
-    console.log(chalk.bgGreen.white('Complete!'));
+    this.addLogEntry(chalk.bgGreen.white('Complete!'));
   };
 }

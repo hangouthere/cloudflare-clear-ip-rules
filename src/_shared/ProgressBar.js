@@ -35,7 +35,7 @@ const DEFAULT_PROPS = {
   charRight: ']'
 };
 
-export default ProgressBar = props => {
+export default props => {
   const buildProps = { ...DEFAULT_PROPS, ...props };
 
   return BuildPercentBar(buildProps);

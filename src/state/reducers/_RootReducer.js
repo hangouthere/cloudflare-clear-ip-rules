@@ -1,10 +1,11 @@
-import { combineReducers } from '_Shared/reducerUtils';
 import { AppStateReducer, InitialAppState } from './AppStateReducer';
 import {
   CloudflareConfigReducer,
   InitialCloudflareConfigState
 } from './CloudflareConfigReducer';
 import { InitialScannerState, ScannerReducer } from './ScannerReducer';
+
+import { combineReducers } from '_Shared/reducerUtils';
 
 export const _InitialRootState = {
   App: InitialAppState,

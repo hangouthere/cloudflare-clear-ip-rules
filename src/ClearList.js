@@ -61,7 +61,7 @@ export default class ClearList extends EventEmitter {
     // Determines if we have any more data to read...
 
     // No totals data stored, clearly we need to process!
-    if (!this.numIPs || this.api.pagination.page < this.totalPages) {
+    if (!this.numIPs || this.api.pagination.page <= this.totalPages) {
       await this._hydratePageData();
       await this._processPageData();
     } else if (this.numIPs) {

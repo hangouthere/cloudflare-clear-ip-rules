@@ -7,7 +7,7 @@ import Progress from './Progress';
 import Status from './Status';
 import { StoreContext } from '../state/StoreProvider';
 
-export default StatusContainer = ({}) => {
+export default ({}) => {
   const { state } = useContext(StoreContext);
 
   const {
@@ -28,7 +28,7 @@ export default StatusContainer = ({}) => {
     >
       <Status {...{ statusMessage }} />
       {isConfigured && <CFConfig {...CloudflareConfig} />}
-      {isScanning && <Progress {...{ Scanner }} />}
+      {isScanning && <Progress {...Scanner} />}
     </Box>
   );
 };
