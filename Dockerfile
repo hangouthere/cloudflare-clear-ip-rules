@@ -6,7 +6,8 @@ ARG GID=1000
 USER root
 RUN apk add --no-cache \
     # Node Compilation stuff
-    g++ gcc libgcc libstdc++ linux-headers make python git fts-dev \
+    # ! FIXME - Might need python2 if build breaks!!! Upstream node image changed base, and `python` doesn't exist anymore, so python3 is a fillin, but again if build breaks, try python2
+    g++ gcc libgcc libstdc++ linux-headers make python3 git fts-dev \
     # User MGMT stuff
     shadow sudo && \
     if [ -z "`getent group $GID`" ]; then \

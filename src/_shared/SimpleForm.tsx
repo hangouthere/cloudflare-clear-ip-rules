@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Box, useFocusManager, useInput } from 'ink';
-import { FormProps, FormSection } from 'ink-form';
+import { FormProps } from 'ink-form';
 import { useEffect, useMemo, useState } from 'react';
 
 import { FormFieldRenderer } from 'ink-form/lib/FormFieldRenderer';

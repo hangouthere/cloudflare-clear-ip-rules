@@ -2,17 +2,18 @@
   "name": "npx",
   "version": "0.0.0",
   "license": "MIT",
-  "bin": "cli.js",
+  "bin": "./dist/cli.js",
   "main": "./dist/cli.js",
   "engines": {
-    "node": ">=10"
+    "node": "=14"
   },
   "scripts": {
     "docker-compose": "echo \"Running in docker-compose... You should run interactively by attaching:\n\t\tdocker exec -it `hostname` npm run start\" && tail -f /dev/null",
-    "start": "parcel build ./cli.js && npx ./dist/cli.js",
+    "start": "parcel build && npx ./dist/cli.js",
     "dev": "concurrently -r 'npm:dev-concurrently*'",
-    "dev-concurrently:watch": "parcel watch ./cli.js",
-    "dev-concurrently:run": "nodemon --inspect=0.0.0.0:9229 -L ."
+    "dev-concurrently:watch": "parcel watch",
+    "dev-concurrently:run": "nodemon --inspect=0.0.0.0:9229 -L .",
+    "build": "pkg ."
   },
   "dependencies": {
     "@parcel/transformer-react-refresh-wrap": "^2.0.0-alpha.3",
@@ -49,9 +50,21 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "ink-testing-library": "^2.1.0",
     "nodemon": "^2.0.12",
-    "parcel": "^2.0.0-beta.3.1"
+    "parcel": "^2.0.0-beta.3.1",
+    "pkg": "^5.3.1"
   },
   "alias": {
     "_Shared": "./src/_shared"
+  },
+  "targets": {
+    "main": {
+      "source": "./cli.js",
+      "includeNodeModules": true
+    }
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": "dist/**/*.json",
+    "outputPath": "build"
   }
 }

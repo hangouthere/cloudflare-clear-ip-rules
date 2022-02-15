@@ -21,7 +21,7 @@ export default ViewManager = () => {
   } = useContext(StoreContext);
 
   return (
-    <Box borderStyle="round" borderColor="gray" paddingX={1} flexGrow>
+    <Box borderStyle="round" borderColor="gray" paddingX={1} flexGrow={1}>
       {createElement(Views[mode])}
     </Box>
   );

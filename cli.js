@@ -36,7 +36,7 @@ const cli = meow(`
                                                Assumes token/email are configured, or passed as options.
         --quiet, -q                          - Only valid when used with ${chalk.bgGrey(
           'clear/clean/ci'
-        )} to reduce, extraneous output. 
+        )} to reduce, extraneous output.
 
     Examples
         $ ${cmdName} --token=1234567890abcdefgh1234567890 --email=user@blah.com
